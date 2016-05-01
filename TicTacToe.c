@@ -4,8 +4,7 @@
  #include <string.h>
  #include <time.h>
  #include <math.h> 
- 
- // to use this in cmd prompt, just use g++ hw.c -o hw.exe
+
  
  /*
 	HOW DOES THIS PROGRAM WORK?
@@ -559,12 +558,12 @@ later in the program.*/
                 printf("You are just lucky, mere mortal\n");
         } else if (sign == mysign) {
 				//winning. The sign is equal to the computer's sign.
-                printf("I win, LOSERRRR!\n");
+                printf("I win.\n");
         }
 		else if (sign == 0)
-				printf("DRAW??? That's just because I'm going easy on you.\n");
+				printf("Draw.\n");
 		else
-				{printf("Your move. Chief.\n");}
+				{printf("Your move.\n");}
 		printf("%d\n", result+1);
 		//The returning value that we're interested in.
         return result+1;
