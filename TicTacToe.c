@@ -7,21 +7,7 @@
 
  
  /*
-	HOW DOES THIS PROGRAM WORK?
-	The program's function could be divided in two main parts:
-	- Compute the best move.
-	- Deciding whether or not the move should be make to make the program more "human".
-	
-	Step 1: Compute the best move.
-	Just like human, here's how the program take the input to make the best move on the board:
-	Read the input --> Translate the input onto the board --> Check if the situation is already a win, a lose, 
-	or a tie --> Check if the computer can make can make immediate win --> Check if the computer can block immediate lose 
-	--> Make a move on the board if none of the win or lose is immediate --> Return the value.
-	
-	Step 2: Decide
-	The "deciding" part is embedded into the "computing" part. As you, the reader of the program, will see, the computer
-	will use randomized value to decide how to play.
-	
+ 	Please read README.md
 	MINH TRAN April 2015.
  */
  
