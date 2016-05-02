@@ -1,5 +1,5 @@
-# tic-tac-toe_AI
-An attempt at building a Tic-Tac-Toe program that mimic human using brute force.
+## tic-tac-toe_AI
+An attempt at building a Tic-Tac-Toe program using only for loops and if-else statement in order to compare it with other, more efficient ways to implement Tic-Tac-Toe.
 
 ####How to play this game?
 
@@ -17,14 +17,14 @@ The program always choose X and the user always choose O
 
 This program run using brute force. I'll certainly implement a Tic-Tac-Toe using Minimax in the future.
 
-#####Compute the best move.
-
 After receiving the user's input (order to move, sign, and position), the program will do the following:
 
-Read the input --> Translate the input onto the board --> Check if the situation is already a win, a lose, 
-or a tie --> Check if the computer can make can make immediate win --> Check if the computer can block immediate lose 
---> Make a move on the board if none of the win or lose is immediate --> Return the value.
+1. Read the input
+2. Translate the input onto the board
+3. Check if the situation is already a win, a lose, or a tie
+4. Check if the computer can make can make immediate win 
+5. Check if the computer can block immediate lose 
+6. Make a move on the board if none of the win or lose is immediate
 	
-#####Decide
-The "deciding" part is embedded into the "computing" part. As you, the reader of the program, will see, the computer
-will use randomized value to decide how to play.
+####Yeah, but why though?
+I made this as a comparison to another, similar Tic-Tac-Toe I wrote using minimax and recursive functions. This program, by computing every possible decisions and outcomes using if-else statements, take ~400 lines to write. The same can be achieved in ~100 lines using minimax.
