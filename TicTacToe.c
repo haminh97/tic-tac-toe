@@ -35,37 +35,22 @@
 		return a;
 	}
 
-/*A few words about the wrap function: I tried the modulo function for the number to wrap around, expecting -1 mod 2 is equal
-/to 2. However, it doesn't turn out as expected. Therefore I wrote a separate wrap() function. It's use will be documented
-later in the program.*/ 
 	
   int main() {
-  
-		int p = time(NULL)-sqrt(time(NULL))*4;
-		srand(p);
-		int ran = rand() % 50;
-		
-		/*Perhaps, an artificial intelligence cannot pass the Turing test if it is TOO perfect. Therefore, I need to introduce 
-		some artificial "stupidity" to the program so that it won't play the same move given a similar board set up.
-		I got into some troubles with seeding the random function using time, as I figured out that the program only run
-		in less than 1 second, not enough to get different randomized seeds. However, I came up with the solution to 
-		use the resulting randomized value as seed, thus keeping the seed varied.*/
-				
-		char boardInput[50];
-		printf("Enter your input: ");
-		fgets(boardInput, 100, stdin);
-        int count = 0;
-        int board[3][3], index, sign, player, flag, i, k, j, n, mysign, opsign, result, movecount;
-		mysign = 'X';
-		opsign = 'O';
-		movecount = 0;
-		result = 0;
-		
-		/*Some declarations for the program. For the board I decided to go for a 2-dimensional array, because I*
-		believe that some logical function would be easier if we have a grid system rather than a 1-dimensional 
-		array system. For example, it's easier to imagine board[2][0] as the bottom left corner of the board rather than
-		board[7]. But that's just my two cents.*/
 
+		//Declarations
+		
+        int board[3][3];			//3 x 3 board.
+		int index, sign, i, k, j, n;
+		char mysign;				//Computer's sign
+		char opsign;				//Opponent's sign
+		int movecount = 0;			//movecount increment after each moves. Game over when movecount reaches 9
+		int win = 0;				//win = 0 when player win and win = 1 when computer win
+		int result = 0;				//result is not needed. Remember to delete it
+		
+		/*Filling up the board with blank values. 
+		To check if a board is occupied or not, just check if board[i][j] == ' '*/
+		
         for (i = 0; i < 3; i++)
 			{
             for (j = 0; j < 3; j++)
@@ -73,331 +58,248 @@ later in the program.*/
 					board[i][j] = ' ';
 				}
 			}
+			
+		/*Asking what sign user want to choose
+		store into mysign and opsign*/
+		char player_sign;
+		printf("Do you want to play as [X/O]: ");
+		fgets(player_sign, 1, stdin);
+		if (player_sign == 'X'){
+			mysign = 'O'; opsign = 'X';}	
+		else if (player_sign == 'O'){
+			mysign = 'X'; opsign = 'O';}
+		else {
+			printf("Invalid input"); 	
+			return;}
+
+		//Game loop. Ends when movecount reaches 9 or when a player win.
 		
-		/*Filling up the board with blank values. Later, to check if a board is occupied or not, I'd just need to check
-		if board[i][j] == ' ';*/
-		
-		
-		readinput:
-		for (k = 0; k < 9; k++)
-		{
-			if (boardInput[k] == 'X' || boardInput[k] == 'O')
-			{
-				i = k/3;
-				j = k%3;
-				board[i][j] = boardInput[k];
-				movecount++;
+		while (movecount < 9){
+	
+			//Read user's string input and convert into int
+			
+			char player_input[50];
+			char * ptr;
+			int player_move;
+			printf("Enter your move [1-9]: ");
+			fgets(player_input, 50, stdin);
+			player_move = (int) strtol(str, &ptr, 10);
+			
+			if ( (player_move <= 0) | (player_move >= 10) ) {
+				printf("Invalid Input");
+				return;
 			}
-			if (boardInput[9]=='X')
-				{mysign='X';
-				opsign='O';}
-			else
-				{mysign='O';
-				opsign='X';}
-		}
-		
-		/*The first part, readinput, just read the input from the function and transform it onto the board. Notice the
-		movecount variable that count the number of pieces on the tic-tac-toe board. This variable will be useful later.*/
-				
-        if (movecount <= 9) {
-                flag = 0;
-                printf("\n\n");
-                printf("\t\t\t  %c | %c  | %c  \n", board[0][0], board[0][1], board[0][2]);
-                printf("\t\t\t----+----+----\n");
-                printf("\t\t\t  %c | %c  | %c  \n", board[1][0], board[1][1], board[1][2]);
-                printf("\t\t\t----+----+---\n");
-                printf("\t\t\t  %c | %c  | %c  \n", board[2][0], board[2][1], board[2][2]);
-		
-			/*Print out a virtual board. Perhaps this is unnecessary given that the function only needs to return the
-			position of its move. But I want to put this on to visualize the board more easily and to test whether or not
-			readinput work correctly. The board now looks like this:
+			
+			//Decode user's input and put into board[][]
+			
+			int row = player_move/3;
+			int col = player_move%3;
+			board[row][col] = opsign;
+			
+			/*Print out 3x3 board to console. Board layout:
 			
 										| 0,0 | 0,1 | 0,2 |
 										| 1,0 | 1,1 | 1,2 |
 										| 2,0 | 2,1 | 2,2 |
 			
 			*/
-		
-		checklose:
-			for (i = 0; i < 3; i++)
-			{
-				if (board[i][0]== opsign && board[i][1]== opsign && board[i][2]== opsign)
-				{sign = opsign; goto win;}
-				//Check losing on the horizontal. This means that all positions on one horizontal axis have the same signs.
-				
-			}
-			for (j = 0; j < 3; j++)
-			{
-				if (board[0][j]== opsign && board[1][j]== opsign && board[2][j]== opsign)
-				{sign = opsign; goto win;}
-				//Check losing on the vertical. This means that all positions on one vertical axis have the same signs.
-			}	
-			if ((board[0][0]== opsign && board[1][1]== opsign && board[2][2]== opsign) ||
-				(board[0][2]== opsign && board[1][1]== opsign && board[2][0]== opsign))
-				{sign = opsign; goto win;}
-				//The same; check lose on the diagonal.
-				
-		checkwin:
-		
-		/*checkwin is pretty similar to checklose, with just the signs reversed. In fact I copied the checklose part
-		and changed opsign to mysign in order to make checkwin*/
-		
-			for (i = 0; i < 3; i++)
-			{
-				if (board[i][0]== mysign && board[i][1]== mysign && board[i][2]== mysign)
-				{sign = mysign; goto win;}
-			}
-			for (j = 0; j < 3; j++)
-			{
-				if (board[0][j]== mysign && board[1][j]== mysign && board[2][j]== mysign)
-				{sign = mysign; goto win;}
-			}	
-			if ((board[0][0]== mysign && board[1][1]== mysign && board[2][2]== mysign) ||
-				(board[0][2]== mysign && board[1][1]== mysign && board[2][0]== mysign))
-				{sign = mysign; goto win;}				
 			
-			if (movecount == 9)
-				{
-				//Check for a draw. When there are 9 pieces on the board and there are no win nor lose, it's a draw.
-				sign = 0;
-				result = 0;
-				goto win;
+            printf("\n\n");
+            printf("\t\t\t  %c | %c  | %c  \n", board[0][0], board[0][1], board[0][2]);
+            printf("\t\t\t----+----+----\n");
+            printf("\t\t\t  %c | %c  | %c  \n", board[1][0], board[1][1], board[1][2]);
+            printf("\t\t\t----+----+---\n");
+            printf("\t\t\t  %c | %c  | %c  \n", board[2][0], board[2][1], board[2][2]);
+		
+			//Check if either the player or the computer has won by comparing values 
+			//on the rows, col and diagonal.
+		
+			checkwin:
+				//Do any row have the same input?
+				for (i = 0; i < 3; i++){
+					if (board[i][0] == board[i][1] == board[i][2]){
+					(board[i][0] = mysign)?(win=1):(win=0);
+					break;
+					}
 				}
 				
+				//Do any column have the same input?
+		
+				for (j = 0; j < 3; j++){
+					if (board[0][j]== board[1][j]== board[2][j]){
+					(board[0][j] = mysign)?(win=1):(win=0);
+					break;
+					}
+				}
+				
+				//Do any diagonal have the same sign?
+				if ((board[0][0] == board[1][1] == board[2][2]) ||
+					(board[0][2] == board[1][1] == board[2][0]) ){
+					(board[0][j] = mysign)?(win=1):(win=0);
+					break;
+					}
+		
+		//Makewin sees if the machine have any winning move and make that move.
 		makewin:
-		
-		/*This is where the two-dimensional array prevails over the one-dimensional. In here I utilized the two coordinated
-		axis to firgue out how the pieces could make a win.*/
-		
-			if (ran < 49)
-			{
-			
-			/*Here comes the "artificial stupidity." When human play, it is noted that sometimes they miss making
-			winning moves as well as blocking losing moves. Therefore, I use a randomized function to mirror that.
-			For example, if(ran < 49) means that it won't make the winning move 2% of the time.*/
-			
-				for (i = 0; i < 3; i++)
-				{
-					for (j = 0; j < 3; j++)
-					{
-						if (board[i][j] == mysign)
-						{
-						
-							//make win on the horizontal
-						
-							if (board[i][wrap(j-1)] == mysign || board[i][wrap(j+1)] == mysign)
-							{
-								for (n = 0; n < 3; n++)
-								{
-									if (board[i][n] == ' ')
-									{board[i][n] = mysign;
-									result = i*3+n;
-									sign = mysign;
-									goto win;}
+	
+			for (i = 0; i < 3; i++){
+				for (j = 0; j < 3; j++){
+					if (board[i][j] == mysign){
+					
+						//make winning move on the horizontal
+					
+						if (board[i][wrap(j-1)] == mysign || board[i][wrap(j+1)] == mysign){
+							for (n = 0; n < 3; n++){
+								if (board[i][n] == ' '){
+									board[i][n] = mysign;
+									win = 1;
+									goto theend;
 								}
 							}
-							
-							//make win on the vertical
-							
-							else if (board[wrap(i-1)][j] == mysign || board[wrap(i+1)][j] == mysign)
-							{					
-								for (n = 0; n < 3; n++)
-								{
-									if (board[n][j] == ' ')
-									{board[n][j] = mysign;
+						}
+						
+						//make winning move on the vertical
+						
+						else if (board[wrap(i-1)][j] == mysign || board[wrap(i+1)][j] == mysign){					
+							for (n = 0; n < 3; n++){
+								if (board[n][j] == ' '){
+									board[n][j] = mysign;
 									result = n*3+j;								
-									sign = mysign;
-									goto win;}
+									win = 1;
+									goto theend;
 								}
 							}
-							
-							//make win on the diagonal		
-							else if (i==j)
-							{ 
-							//first diagonal
-								if (board[wrap(i+1)][wrap(j+1)] == mysign)
-								{
-									if (board[wrap(i-1)][wrap(j-1)] == ' ')
-									{
+						}
+						
+						//make winning move on the diagonal		
+						else if (i==j){ 
+						
+						//first diagonal (0,0) (1,1) (2,2)
+						
+							if (board[wrap(i+1)][wrap(j+1)] == mysign){
+								if (board[wrap(i-1)][wrap(j-1)] == ' '){
 									board[wrap(i-1)][wrap(j-1)] = mysign;
-									sign = mysign;
-									result = wrap(i-1)*3+wrap(j-1);								
-									goto win;
-									}
-								}
-								
-								if (board[wrap(i-1)][wrap(j-1)] == mysign)
-								{
-									if (board[wrap(i+1)][wrap(j+1)] == ' ')
-									{
-									board[wrap(i+1)][wrap(j+1)] = mysign;
-									sign = mysign;
-									result = wrap(i+1)*3+wrap(j+1);
-									goto win;
-									}
+									result = wrap(i-1)*3+wrap(j-1);		
+									win = 1;
+									goto theend;
 								}
 							}
 							
-							else if ((i+j)==2)
-							{
-							//second diagonal
-								if (board[wrap(i-1)][wrap(j+1)] == mysign)
-								{
-									if (board[wrap(i+1)][wrap(j-1)] == ' ')
-									{
+							if (board[wrap(i-1)][wrap(j-1)] == mysign){
+								if (board[wrap(i+1)][wrap(j+1)] == ' '){
+									board[wrap(i+1)][wrap(j+1)] = mysign;
+									result = wrap(i+1)*3+wrap(j+1);
+									win = 1;
+									goto theend;
+								}
+							}
+						}
+						
+						else if ((i+j)==2){
+						//second diagonal (0,2) (1,1) (2,0)
+							if (board[wrap(i-1)][wrap(j+1)] == mysign){
+								if (board[wrap(i+1)][wrap(j-1)] == ' '){
 									board[wrap(i+1)][wrap(j-1)] = mysign;
 									result = wrap(i+1)*3+wrap(j-1);									
-									sign = mysign;
-									goto win;
-									}
+									win = 1;
+									goto theend;
 								}
-								
-								if (board[wrap(i+1)][wrap(j-1)] == mysign)
-								{
-									if (board[wrap(i-1)][wrap(j+1)] == ' ')
-									{
+							}
+							
+							if (board[wrap(i+1)][wrap(j-1)] == mysign){
+								if (board[wrap(i-1)][wrap(j+1)] == ' '){
 									board[wrap(i-1)][wrap(j+1)] = mysign;
 									result = wrap(i-1)*3+wrap(j+1);									
-									sign = mysign;
-									goto win;
-									}
-								}	
-								
-							}
+									win = 1;
+									goto theend;
+								}
+							}	
+							
 						}
 					}
 				}
 			}
-			
+
+		//Blockwin sees if the human have any winning move and block that move.
 		blockwin:
-			if (ran < 45)
-			
-			/*Similarly, the program won't block the losing move 10% of the time. This number is actually surprisingly
-			close to what real human play is like.*/
-			
+
+			for (i = 0; i < 3; i++)
 			{
-				for (i = 0; i < 3; i++)
+				for (j = 0; j < 3; j++)
 				{
-					for (j = 0; j < 3; j++)
+					if (board[i][j] == opsign)
 					{
-						if (board[i][j] == opsign)
-						{
+					
+						//block win on the horizontal
+					
+						if (board[i][wrap(j-1)] == opsign || board[i][wrap(j+1)] == opsign){
+							for (n = 0; n < 3; n++){
+								if (board[i][n] == ' '){
+									board[i][n] = mysign;								
+									goto theend;
+								}
+							}
+						}
 						
-							//block win on the horizontal
+						//block win on the vertical
 						
-							if (board[i][wrap(j-1)] == opsign || board[i][wrap(j+1)] == opsign)
-							{
-								for (n = 0; n < 3; n++)
-								{
-									if (board[i][n] == ' ')
-									{board[i][n] = mysign;
-									result = i*3+n;								
-									goto win;}
+						else if (board[wrap(i-1)][j] == opsign || board[wrap(i+1)][j] == opsign){					
+							for (n = 0; n < 3; n++){
+								if (board[n][j] == ' '){
+									board[n][j] = mysign;							
+									goto theend;
+								}
+							}
+						}
+						
+						//block win on the diagonal		
+						else if (i==j){ 
+						//first diagonal
+							if (board[wrap(i+1)][wrap(j+1)] == opsign){
+								if (board[wrap(i-1)][wrap(j-1)] == ' '){
+									board[wrap(i-1)][wrap(j-1)] = mysign;								
+									goto theend;
 								}
 							}
 							
-							//block win on the vertical
-							
-							else if (board[wrap(i-1)][j] == opsign || board[wrap(i+1)][j] == opsign)
-							{					
-								for (n = 0; n < 3; n++)
-								{
-									if (board[n][j] == ' ')
-									{board[n][j] = mysign;
-									result = n*3+j;								
-									goto win;}
+							if (board[wrap(i-1)][wrap(j-1)] == opsign){
+								if (board[wrap(i+1)][wrap(j+1)] == ' '){
+									board[wrap(i+1)][wrap(j+1)] = mysign;								
+									goto theend;
 								}
 							}
-							
-							//block win on the diagonal		
-							else if (i==j)
-							{ 
-							//first diagonal
-								if (board[wrap(i+1)][wrap(j+1)] == opsign)
-								{
-									if (board[wrap(i-1)][wrap(j-1)] == ' ')
-									{
-									board[wrap(i-1)][wrap(j-1)] = mysign;
-									result = wrap(i-1)*3+wrap(j-1);										
-									goto win;
-									}
-								}
-								
-								if (board[wrap(i-1)][wrap(j-1)] == opsign)
-								{
-									if (board[wrap(i+1)][wrap(j+1)] == ' ')
-									{
-									board[wrap(i+1)][wrap(j+1)] = mysign;
-									result = wrap(i+1)*3+wrap(j+1);									
-									goto win;
-									}
-								}
-							}
-							
-							else if ((i+j)==2)
-							{
-							//second diagonal
-								if (board[wrap(i-1)][wrap(j+1)] == opsign)
-								{
-									if (board[wrap(i+1)][wrap(j-1)] == ' ')
-									{
+						}
+						
+						else if ((i+j)==2){
+						//second diagonal
+							if (board[wrap(i-1)][wrap(j+1)] == opsign){
+								if (board[wrap(i+1)][wrap(j-1)] == ' '){
 									board[wrap(i+1)][wrap(j-1)] = mysign;
 									result = wrap(i+1)*3+wrap(j-1);										
-									goto win;
-									}
+									goto theend;
 								}
-								
-								if (board[wrap(i+1)][wrap(j-1)] == opsign)
-								{
-									if (board[wrap(i-1)][wrap(j+1)] == ' ')
-									{
+							}
+							
+							if (board[wrap(i+1)][wrap(j-1)] == opsign){
+								if (board[wrap(i-1)][wrap(j+1)] == ' '){
 									board[wrap(i-1)][wrap(j+1)] = mysign;
 									result = wrap(i-1)*3+wrap(j+1);										
-									goto win;
-									}
-								}	
-								
-							}
+									goto theend;
+								}
+							}	
+							
 						}
 					}
-				}		
-			}
-			
+				}
+			}		
+
+		//Makemove make a move for the computer
 		makemove:
-
-			/*Here comes the tricky part. How the program could deal with concepts such as making forks or blocking 
-			them? One approach would be to write a "tree of variation" kind of program, but that would be too difficult
-			a task for someone who hasn't had much experiences in programming. Instead, I utilized the following common
-			method:
-			- Play the first move in the centre.
-			- A corner is better than a side square, since forking moves usually appear at the corner of the board
-			- When there are 6 pieces or more, the game usually is a draw if we only block the opponent's moves
-			
-			The result is, surprisingly, close to human play! */
-			
-			p = 11*time(NULL)-sqrt(time(NULL))*9;
-			srand(p);
-			ran = rand() % 50;
-
-
-			if (board[1][1] == ' ')
-			{
-			
-			//If the centre is not occupied, go for it! But only for 94% of the time. A little bit of random is more fun
-			// and definitely more human!
-				if (ran < 47)
-				{
-					board[1][1] = mysign;
-					result = 4;
-					goto win;
-				}
-				else 
-				{
-					if (board[0][2] == ' ')
-					{board[0][2] = mysign;
-					result = 2;
-					goto win;}
-				}
+	
+			//If the centre is not occupied, go for it!
+			if (board[1][1] == ' '){
+				board[1][1] = mysign;
+				goto theend;
 			}
 			
 			if (movecount == 1)
@@ -406,13 +308,13 @@ later in the program.*/
 				{
 					board[0][0] = mysign;
 					result = 0;
-					goto win;
+					goto theend;
 				}
 				else if (board[0][2] == ' ')
 				{
 					board[0][2] = mysign;
 					result = 2;
-					goto win;
+					goto theend;
 				}
 			}
 			
@@ -432,9 +334,8 @@ later in the program.*/
 									{
 									if (board[i][j] == ' ')
 										{
-										board[i][j] = mysign;
-										result = i*3 + j;						
-										goto win;
+										board[i][j] = mysign;					
+										goto theend;
 										}
 									}
 								}								
@@ -442,29 +343,23 @@ later in the program.*/
 							if((i==j)||(i+j)==2)
 							{
 								board[2-i][2-j] = mysign;
-								result = (2-i)*3+(2-j);
-								goto win;
+								goto theend;
 							}
 							if (i==1)
 							{
 								board[0][2-j] = mysign;
-								result = 2-j;
-								goto win;
+								goto theend;
 							}
 							else if (j==1)
 							{
 								board[2-i][0] = mysign;
-								result = (2-i)*3;
-								goto win;
+								goto theend;
 							}							
 						}
 					}
 				}
 			}
-			
-			p = 2*time(NULL)-sqrt(time(NULL))*14;
-			srand(p);
-			ran = rand() % 50;
+
 		
 			if (movecount > 2 && movecount<6)
 			{
@@ -480,9 +375,8 @@ later in the program.*/
 						if (board[i][j] == ' ' && ran<30)
 							{
 							
-							board[i][j] = mysign;
-							result = i*3 + j;						
-							goto win;
+							board[i][j] = mysign;						
+							goto theend;
 							}
 						}
 					}
@@ -495,15 +389,11 @@ later in the program.*/
 							{
 							board[i][j] = mysign;
 							result = i*3 + j;
-							goto win;
+							goto theend;
 							}
 						}
 					}
 			}
- 			
- 			p = time(NULL)-sqrt(time(NULL))*45;
-			srand(p);
-			ran = rand() % 50; 
 			
 			if (movecount>=6)
 			{
@@ -511,12 +401,8 @@ later in the program.*/
 					{
 					for (j = 0; j < 3; j++)
 						{
-						
-						p = ran*ran + 54*sqrt(14*ran);
-						srand(p);
-						ran = rand() % 50;			
-						
-						if ((board[i][j] == ' ') && (i!=j) && ((i+j) != 2) && ran<25)
+
+						if ((board[i][j] == ' ') && (i!=j) && ((i+j) != 2))
 							{
 							board[i][j] = mysign;
 							result = i*3 + j;
@@ -524,29 +410,12 @@ later in the program.*/
 							}
 						}
 					}				
-			}
-
-			for (i = 0; i < 3; i++)
-				{
-				
-				/*This is just a little precaution. If the program go through all the conditions without making any 
-				moves, it just going to make the move that the first unoccupied square. This happens ~0.5% if my
-				calculations are correct.*/
-				
-				for (j = 0; j < 3; j++)
-					{
-					if (board[i][j] == ' ')
-						{
-						board[i][j] = mysign;
-						result = i*3 + j;
-						goto win;
-						}
-					}
-				}
-			
-		}
+			}		
+		}	
 		
-	win:
+			
+		
+	theend:
             printf("\n\n");
             printf("\t\t\t  %c | %c  | %c  \n", board[0][0], board[0][1], board[0][2]);
             printf("\t\t\t----+----+----\n");
