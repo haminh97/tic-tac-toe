@@ -45,8 +45,7 @@
 		char mysign;				//Computer's sign
 		char opsign;				//Opponent's sign
 		int movecount = 0;			//movecount increment after each moves. Game over when movecount reaches 9
-		int win = 0;				//win = 0 when player win and win = 1 when computer win
-		int result = 0;				//result is not needed. Remember to delete it
+		int win = 2;				//win = 0 when player win, win = 1 when computer win, win = 2 when draw
 		
 		/*Filling up the board with blank values. 
 		To check if a board is occupied or not, just check if board[i][j] == ' '*/
@@ -363,24 +362,6 @@
 		
 			if (movecount > 2 && movecount<6)
 			{
-				for (i = 0; i < 3; i = i+2)
-					{
-					for (j = 0; j < 3; j = j+2)
-						{
-							
-						p = ran*ran*75;
-						srand(p);
-						ran = rand() % 50;						
-						
-						if (board[i][j] == ' ' && ran<30)
-							{
-							
-							board[i][j] = mysign;						
-							goto theend;
-							}
-						}
-					}
-					
 				for (i = 0; i < 3; i++)
 					{
 					for (j = 0; j < 3; j++)
@@ -388,7 +369,6 @@
 						if (board[i][j] == ' ')
 							{
 							board[i][j] = mysign;
-							result = i*3 + j;
 							goto theend;
 							}
 						}
@@ -405,35 +385,37 @@
 						if ((board[i][j] == ' ') && (i!=j) && ((i+j) != 2))
 							{
 							board[i][j] = mysign;
-							result = i*3 + j;
-							goto win;
+							goto theend;
 							}
 						}
 					}				
 			}		
-		}	
 		
-			
-		
-	theend:
+			theend:
+
             printf("\n\n");
             printf("\t\t\t  %c | %c  | %c  \n", board[0][0], board[0][1], board[0][2]);
             printf("\t\t\t----+----+----\n");
             printf("\t\t\t  %c | %c  | %c  \n", board[1][0], board[1][1], board[1][2]);
             printf("\t\t\t----+----+---\n");
-            printf("\t\t\t  %c | %c  | %c  \n", board[2][0], board[2][1], board[2][2]);
-        if (sign == opsign) {
+            printf("\t\t\t  %c | %c  | %c  \n", board[2][0], board[2][1], board[2][2]);	
+			if (win == 0 | win == 1) break;
+			
+			movecount++;
+		}	
+		
+			
+		//Exit.
+
+        if (win == 0) {
 				//losing. The sign is equal to the opponent sign.
                 printf("You are just lucky, mere mortal\n");
-        } else if (sign == mysign) {
+        } else if (win == 1) {
 				//winning. The sign is equal to the computer's sign.
                 printf("I win.\n");
         }
-		else if (sign == 0)
+		else{
 				printf("Draw.\n");
-		else
-				{printf("Your move.\n");}
-		printf("%d\n", result+1);
-		//The returning value that we're interested in.
-        return result+1;
+		}
+		return 0;
   }
