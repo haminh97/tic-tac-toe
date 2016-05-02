@@ -68,9 +68,9 @@
 			printf("Do you want to play as [X/O]: ");
 			fflush(stdout);
 			fgets(player_sign, 2, stdin);
-			if (strcmp(player_sign, "X") == 0){
+			if (strcmp(player_sign, "X") == 0 || strcmp(player_sign, "x") == 0){
 				mysign = 'O'; opsign = 'X';}	
-			else if (strcmp(player_sign, "O") == 0){
+			else if (strcmp(player_sign, "O") == 0 || strcmp(player_sign, "o") == 0){
 				mysign = 'X'; opsign = 'O';}
 			else {
 				printf("Invalid input"); 	
@@ -117,16 +117,16 @@
 					
 					//Read user's string input and convert into int
 					fflush(stdout);
-					char player_input[2];
+					char player_input[10];
 					printf("Enter your move [1-9]: ");
-					fgets(player_input, 2, stdin);
+					fgets(player_input, 10, stdin);
 					
 					char * ptr;
 					int player_move;			
 					player_move = (int) strtol(player_input, &ptr, 10);
 					
 					if ( (player_move <= 0) | (player_move >= 10) ) {
-						printf("Occupied Space. Please do it again");
+						printf("Invalid Number. Please do it again");
 						movecount--;
 						goto theend;
 					}
@@ -143,7 +143,7 @@
 						movecount++;
 					}
 					else {
-						printf("Invalid Input. Please do it again");
+						printf("Occupied Space. Please do it again");
 						movecount--;
 						goto theend;
 					}
@@ -460,8 +460,8 @@
 			printf("Do you want to play again? [Y/N]: ");
 			fflush(stdout);
 			fgets(player_cont, 2, stdin);
-			if (strcmp(player_cont, "Y") == 0){}	
-			else if (strcmp(player_cont, "N") == 0){
+			if (strcmp(player_cont, "Y") == 0 || strcmp(player_cont, "y") == 0){}	
+			else if (strcmp(player_cont, "N") == 0 || strcmp(player_cont, "n") == 0){
 				playing = 0;}
 			else {
 				printf("Invalid input"); 	
