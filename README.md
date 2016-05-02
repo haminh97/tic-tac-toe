@@ -1,4 +1,4 @@
-## tic-tac-toe_AI
+## tic-tac-toe
 An attempt at building a Tic-Tac-Toe program using only for loops and if-else statement in order to compare it with other, more efficient ways to implement Tic-Tac-Toe.
 
 ####How to play this game?
