@@ -44,12 +44,14 @@
 		int index, sign, i, k, j, n;
 		char mysign;				//Computer's sign
 		char opsign;				//Opponent's sign
-		int movecount = 0;			//movecount increment after each moves. Game over when movecount reaches 9
-		int win = 2;				//win = 0 when player win, win = 1 when computer win, win = 2 when draw
+
 		int PC_play_first = 0;		//set to 1 when user want to play 2nd
 		int playing = 1;			//set to 0 when user don't want to play anymore
 			
 		while (playing == 1){
+			
+			int movecount = 0;			//movecount increment after each moves. Game over when movecount reaches 9
+			int win = 2;				//win = 0 when player win, win = 1 when computer win, win = 2 when draw
 			
 			/*Filling up the board with blank values. 
 			To check if a board is occupied or not, just check if board[i][j] == ' '*/
