@@ -122,6 +122,3 @@ After receiving the user's input (order to move, sign, and position), the progra
 	Draw.
 	Do you want to play again? [Y/N]: n
 
-	
-####Yeah, but why though?
-I made this as a comparison to another, similar Tic-Tac-Toe I wrote using minimax and recursive functions. This program, by computing every possible decisions and outcomes using if-else statements, take ~400 lines to write. The same can be achieved in ~100 lines using minimax.
